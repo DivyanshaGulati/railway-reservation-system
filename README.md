@@ -98,3 +98,5 @@ src
 - Docker
 - CI/CD
 - AWS Deployment
+
+This project is actively being enhanced with validation, transaction management, concurrency control, authentication, testing, containerization, and cloud deployment.
