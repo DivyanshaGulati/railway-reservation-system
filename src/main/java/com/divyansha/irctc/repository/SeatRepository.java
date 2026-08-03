@@ -8,5 +8,5 @@ import java.util.List;
 public interface SeatRepository extends JpaRepository<Seat, Long> {
 
     List<Seat> findByTrainId(Long trainId);
-    List<Seat> findByTrainTrainNumber(String trainNumber);
+    List<Seat> findByTrainIdAndStatus(Long trainId, String status);
 }

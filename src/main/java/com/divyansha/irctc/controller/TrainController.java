@@ -1,7 +1,8 @@
 package com.divyansha.irctc.controller;
 
+import com.divyansha.irctc.dto.AvailabilityResponse;
 import com.divyansha.irctc.entity.Train;
-import com.divyansha.irctc.repository.TrainRepository;
+import com.divyansha.irctc.service.SeatService;
 import com.divyansha.irctc.service.TrainService;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,9 +11,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/trains")
 public class TrainController {
-    private TrainService trainService;
-    TrainController(TrainService trainService) {
+    private final TrainService trainService;
+    private final SeatService seatService;
+    TrainController(TrainService trainService, SeatService seatService) {
         this.trainService = trainService;
+        this.seatService = seatService;
     }
 
     @PostMapping
@@ -35,5 +38,11 @@ public class TrainController {
     @GetMapping("/number/{trainNumber}")
     public Train getTrainByTrainNumber(@PathVariable String trainNumber) {
         return trainService.getTrainByTrainNumber(trainNumber);
+    }
+
+    @GetMapping("/{trainId}/availability")
+    public AvailabilityResponse getAvailability(@PathVariable Long trainId) {
+        return seatService.getAvailability(trainId);
+
     }
 }

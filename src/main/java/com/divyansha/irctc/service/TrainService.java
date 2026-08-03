@@ -2,6 +2,7 @@ package com.divyansha.irctc.service;
 
 import com.divyansha.irctc.entity.Seat;
 import com.divyansha.irctc.entity.Train;
+import com.divyansha.irctc.exception.TrainNotFoundException;
 import com.divyansha.irctc.repository.SeatRepository;
 import com.divyansha.irctc.repository.TrainRepository;
 import org.springframework.stereotype.Service;
@@ -34,9 +35,9 @@ public class TrainService {
         return trainRepository.findAll();
     }
     public Train getTrainById(Long id) {
-        return trainRepository.findById(id).orElse(null);
+        return trainRepository.findById(id).orElseThrow(()->new TrainNotFoundException("Train not found"));
     }
     public Train getTrainByTrainNumber(String trainNumber) {
-        return trainRepository.findByTrainNumber(trainNumber);
+        return trainRepository.findByTrainNumber(trainNumber).orElseThrow(()->new TrainNotFoundException("Train not found"));
     }
 }

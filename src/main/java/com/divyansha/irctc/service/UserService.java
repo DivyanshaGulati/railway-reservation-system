@@ -16,5 +16,4 @@ public class UserService {
     public User registerUser(User user) {
         return userRepository.save(user);
     }
-
 }

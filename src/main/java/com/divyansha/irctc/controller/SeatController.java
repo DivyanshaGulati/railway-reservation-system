@@ -21,10 +21,4 @@ public class SeatController {
     public List<Seat> getSeatsByTrainId(@PathVariable Long trainId) {
         return seatService.getSeatsByTrainId(trainId);
     }
-
-    // Passengers
-    @GetMapping("/trainNumber/{trainNumber}")
-    public List<Seat> getSeatsByTrainNumber(@PathVariable String trainNumber) {
-        return seatService.getSeatsByTrainNumber(trainNumber);
-    }
 }
