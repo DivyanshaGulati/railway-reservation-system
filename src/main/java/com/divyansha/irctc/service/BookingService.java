@@ -5,6 +5,7 @@ import com.divyansha.irctc.entity.Seat;
 import com.divyansha.irctc.entity.Ticket;
 import com.divyansha.irctc.entity.Train;
 import com.divyansha.irctc.entity.User;
+import com.divyansha.irctc.exception.*;
 import com.divyansha.irctc.repository.*;
 import org.springframework.stereotype.Service;
 
@@ -29,14 +30,18 @@ public class BookingService {
 
     public Ticket bookTicket(BookingRequest bookingRequest) {
 
-        User user = userRepository.findById(bookingRequest.getUserId()).orElse(null);
+        User user = userRepository.findById(bookingRequest.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        Train train = trainRepository.findById(bookingRequest.getTrainId()).orElse(null);
+        Train train = trainRepository.findById(bookingRequest.getTrainId()).orElseThrow(()-> new TrainNotFoundException("Train not found"));
 
-        Seat seat = seatRepository.findById(bookingRequest.getSeatId()).orElse(null);
+        Seat seat = seatRepository.findById(bookingRequest.getSeatId()).orElseThrow(()-> new SeatNotFoundException("Seat not found"));
+
+        if (!seat.getTrain().getId().equals(train.getId())) {
+            throw new SeatTrainMismatchException("Seat does not belong to the selected train");
+        }
 
         if (!seat.getStatus().equals("AVAILABLE")) {
-            return null;
+            throw new SeatAlreadyBookedException("Seat is already booked");
         }
 
         Ticket ticket = new Ticket();
