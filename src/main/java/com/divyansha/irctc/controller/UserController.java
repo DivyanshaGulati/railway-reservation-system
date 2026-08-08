@@ -1,9 +1,11 @@
 package com.divyansha.irctc.controller;
 
+import com.divyansha.irctc.dto.RegisterUserRequest;
 import com.divyansha.irctc.entity.Ticket;
 import com.divyansha.irctc.entity.User;
 import com.divyansha.irctc.service.TicketService;
 import com.divyansha.irctc.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +22,8 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody User user) {
-        return userService.registerUser(user);
+    public User registerUser(@Valid @RequestBody RegisterUserRequest registerUserRequest) {
+        return userService.registerUser(registerUserRequest);
     }
 
     @GetMapping("/{userId}/tickets")
