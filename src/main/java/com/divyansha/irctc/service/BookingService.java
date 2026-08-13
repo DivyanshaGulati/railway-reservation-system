@@ -8,6 +8,7 @@ import com.divyansha.irctc.entity.User;
 import com.divyansha.irctc.exception.*;
 import com.divyansha.irctc.repository.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BookingService {
@@ -28,6 +29,7 @@ public class BookingService {
         this.ticketRepository = ticketRepository;
     }
 
+    @Transactional
     public Ticket bookTicket(BookingRequest bookingRequest) {
 
         User user = userRepository.findById(bookingRequest.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
@@ -52,7 +54,6 @@ public class BookingService {
 
         seat.setStatus("BOOKED");
         seatRepository.save(seat);
-
         return ticketRepository.save(ticket);
     }
 }
