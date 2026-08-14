@@ -3,6 +3,7 @@ package com.divyansha.irctc.exception;
 import com.divyansha.irctc.dto.ErrorResponse;
 import com.divyansha.irctc.dto.ValidationErrorResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -61,5 +62,16 @@ public class GlobalExceptionHandler {
         // Lambda function
         // ex.getBindingResult().getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
         return new ValidationErrorResponse(HttpStatus.BAD_REQUEST.value(), errors);
+    }
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleOptimisticLockingFailure(
+            ObjectOptimisticLockingFailureException ex) {
+
+        return new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                "Seat was booked by another user. Please try again."
+        );
     }
 }

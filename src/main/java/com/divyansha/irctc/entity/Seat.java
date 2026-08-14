@@ -29,4 +29,7 @@ public class Seat {
     @ManyToOne
     @JoinColumn(name = "train_id")
     private Train train;
+
+    @Version
+    private Long version;
 }
