@@ -1,6 +1,7 @@
 package com.divyansha.irctc.controller;
 
 import com.divyansha.irctc.dto.RegisterUserRequest;
+import com.divyansha.irctc.dto.UserResponse;
 import com.divyansha.irctc.entity.Ticket;
 import com.divyansha.irctc.entity.User;
 import com.divyansha.irctc.service.TicketService;
@@ -22,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public User registerUser(@Valid @RequestBody RegisterUserRequest registerUserRequest) {
+    public UserResponse registerUser(@Valid @RequestBody RegisterUserRequest registerUserRequest) {
         return userService.registerUser(registerUserRequest);
     }
 
