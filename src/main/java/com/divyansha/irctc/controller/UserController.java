@@ -1,9 +1,9 @@
 package com.divyansha.irctc.controller;
 
+import com.divyansha.irctc.dto.LoginRequest;
 import com.divyansha.irctc.dto.RegisterUserRequest;
 import com.divyansha.irctc.dto.UserResponse;
 import com.divyansha.irctc.entity.Ticket;
-import com.divyansha.irctc.entity.User;
 import com.divyansha.irctc.service.TicketService;
 import com.divyansha.irctc.service.UserService;
 import jakarta.validation.Valid;
@@ -27,6 +27,10 @@ public class UserController {
         return userService.registerUser(registerUserRequest);
     }
 
+    @PostMapping("/login")
+    public UserResponse login(@Valid @RequestBody LoginRequest loginRequest) {
+        return userService.login(loginRequest);
+    }
     @GetMapping("/{userId}/tickets")
     public List<Ticket> getUserTickets(@PathVariable Long userId) {
         return ticketService.getTicketsByUser(userId);

@@ -1,13 +1,17 @@
 package com.divyansha.irctc.service;
 
+import com.divyansha.irctc.dto.LoginRequest;
 import com.divyansha.irctc.dto.RegisterUserRequest;
 import com.divyansha.irctc.dto.UserResponse;
 import com.divyansha.irctc.entity.User;
+import com.divyansha.irctc.exception.EmailAlreadyRegisteredException;
+import com.divyansha.irctc.exception.InvalidCredentialsException;
 import com.divyansha.irctc.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -20,6 +24,12 @@ public class UserService {
     }
 
     public UserResponse registerUser(RegisterUserRequest request) {
+        Optional<User> existingUser =
+                userRepository.findByEmail(request.getEmail());
+
+        if (existingUser.isPresent()) {
+            throw new EmailAlreadyRegisteredException("Email already registered");
+        }
         User user = new User();
 
         user.setFullName(request.getFullName());
@@ -34,5 +44,20 @@ public class UserService {
 
         User registeredUser = userRepository.save(user);
         return new UserResponse(registeredUser.getId(), registeredUser.getFullName(), registeredUser.getEmail(), registeredUser.getRole(), registeredUser.getCreatedAt(), registeredUser.getUpdatedAt());
+    }
+
+    public UserResponse login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new InvalidCredentialsException("Invalid email or password");
+        }
+        return new UserResponse(
+                user.getId(),
+                user.getFullName(),
+                user.getEmail(),
+                user.getRole(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        );
     }
 }
