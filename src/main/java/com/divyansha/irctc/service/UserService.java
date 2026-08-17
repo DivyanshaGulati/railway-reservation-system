@@ -1,6 +1,7 @@
 package com.divyansha.irctc.service;
 
 import com.divyansha.irctc.dto.LoginRequest;
+import com.divyansha.irctc.dto.LoginResponse;
 import com.divyansha.irctc.dto.RegisterUserRequest;
 import com.divyansha.irctc.dto.UserResponse;
 import com.divyansha.irctc.entity.User;
@@ -17,10 +18,12 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
     // Constructor Injection
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     public UserResponse registerUser(RegisterUserRequest request) {
@@ -46,18 +49,12 @@ public class UserService {
         return new UserResponse(registeredUser.getId(), registeredUser.getFullName(), registeredUser.getEmail(), registeredUser.getRole(), registeredUser.getCreatedAt(), registeredUser.getUpdatedAt());
     }
 
-    public UserResponse login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException("Invalid email or password");
         }
-        return new UserResponse(
-                user.getId(),
-                user.getFullName(),
-                user.getEmail(),
-                user.getRole(),
-                user.getCreatedAt(),
-                user.getUpdatedAt()
-        );
+        String token = jwtService.generateToken(user.getId(), user.getRole());
+        return new LoginResponse(token);
     }
 }

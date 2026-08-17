@@ -1,6 +1,7 @@
 package com.divyansha.irctc.controller;
 
 import com.divyansha.irctc.dto.LoginRequest;
+import com.divyansha.irctc.dto.LoginResponse;
 import com.divyansha.irctc.dto.RegisterUserRequest;
 import com.divyansha.irctc.dto.UserResponse;
 import com.divyansha.irctc.entity.Ticket;
@@ -28,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public UserResponse login(@Valid @RequestBody LoginRequest loginRequest) {
+    public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest) {
         return userService.login(loginRequest);
     }
     @GetMapping("/{userId}/tickets")
